@@ -1,5 +1,6 @@
-import { HomeHeader } from "@screens/Header";
-import { Center, Text, VStack } from "native-base";
+
+import { HomeHeader } from "@components/Header";
+import { VStack } from "native-base";
 
 export function Home() {
   return (
