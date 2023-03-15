@@ -24,7 +24,7 @@ export function HomeGroup({ name, isActive, ...rest }: Props) {
       {...rest}
     >
       <Text
-        color="gray.200"
+        color={ isActive ? "green.500": "gray.200"}
         textTransform="uppercase"
         fontSize="xs"
         fontWeight="bold"
