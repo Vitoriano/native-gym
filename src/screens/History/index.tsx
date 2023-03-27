@@ -39,6 +39,7 @@ export function History() {
             Nao há exercicios registados ainda..
           </Text>
         )}
+        showsVerticalScrollIndicator={false}
       />
       
       
