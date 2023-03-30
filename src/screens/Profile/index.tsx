@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Center, ScrollView, VStack, Skeleton, Text } from "native-base";
+import { Center, ScrollView, VStack, Skeleton, Text, Heading } from "native-base";
 
 import { ScreenHeader } from "@components/ScreenHeader";
 import { UserPhoto } from "@components/Avatar";
 import { TouchableOpacity } from "react-native";
 import { Input } from "@components/Input";
+import { Button } from "@components/Button";
 
 const PHOTO_SIZE = 33;
 
@@ -57,7 +58,34 @@ export function Profile() {
           />
 
         </Center>
-       
+        <VStack px={10} mt={12} mb={9}>
+          <Heading color="gray.200" fontSize="md" mb={2}>
+            Altera senha
+          </Heading>
+
+          <Input 
+            placeholder="senha atual"
+            bg='gray.600'
+            secureTextEntry
+          />
+
+          <Input 
+            placeholder="nova senha"
+            bg='gray.600'
+            secureTextEntry
+          />
+
+          <Input 
+            placeholder="confirma senha"
+            bg='gray.600'
+            secureTextEntry
+          />
+
+          <Button 
+            title="Alterar senha"
+            mt={6}
+          />
+        </VStack>
       </ScrollView>
     </VStack>
 
