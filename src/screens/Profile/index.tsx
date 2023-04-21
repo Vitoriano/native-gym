@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Center, ScrollView, VStack, Skeleton, Text, Heading } from "native-base";
+import * as ImagePicker from 'expo-image-picker';
 
 import { ScreenHeader } from "@components/ScreenHeader";
 import { UserPhoto } from "@components/Avatar";
@@ -12,6 +13,11 @@ const PHOTO_SIZE = 33;
 export function Profile() {
 
   const [isLoadingPhoto, setIsLoadingPhoto] = useState(true);
+
+  async function handleSelectPhoto() {
+    await ImagePicker.launchImageLibraryAsync();
+  
+  }
 
   return (
 
@@ -40,7 +46,9 @@ export function Profile() {
             />
           }
 
-          <TouchableOpacity>
+          <TouchableOpacity 
+            onPress={handleSelectPhoto}
+          >
             <Text color='green.500' fontWeight='bold' fontSize='md' mt={2} mb={8}>
               Altera Foto
             </Text>
