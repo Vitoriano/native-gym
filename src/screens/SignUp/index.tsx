@@ -1,19 +1,39 @@
+import { useState } from "react";
 import { VStack, Image, Text, Center, Heading, ScrollView } from "native-base";
 import { useNavigation } from "@react-navigation/native";
+import { useForm, Controller } from "react-hook-form";
 
 import LogoSvg from "@assets/logo.svg";
 import BackgroundImg from "@assets/background.png";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { type } from "os";
 
+type FormDataProps = {
+  name: string;
+  email: string;
+  password: string;
+}
 
 export function SignUp(){
+
+  const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
+    defaultValues: {
+      name: 'Jhon Doe',
+      email: '',
+      password: '',
+    }
+  });
 
   const navigation = useNavigation();
 
   function handleGoBack(){
     navigation.goBack();
+  }
+
+  function handleSignUp(data: FormDataProps){
+    console.log(data);
   }
 
   return (
@@ -40,21 +60,54 @@ export function SignUp(){
               Crie sua conta
             </Heading>
 
-            <Input  
-              placeholder="Nome"
-            />  
-
-            <Input 
-              placeholder="E-mail"
-              keyboardType="email-address"
-              autoCapitalize="none"
+            <Controller 
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input 
+                  placeholder="Nome"
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+              name="name"
+              rules={{ required: 'Informe o nome' }}
             />
-            <Input  
-              placeholder="Senha"
-              secureTextEntry
+            <Text color="red.500" fontSize="xs">{errors.name?.message}</Text>
+
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input 
+                  placeholder="E-mail"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+              name="email"
+              rules={{ required: 'Informe o email' }}
+            />
+           
+           <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input  
+                  placeholder="Senha"
+                  secureTextEntry
+                  onChangeText={onChange}
+                  value={value}
+                  onSubmitEditing={handleSubmit(handleSignUp)}
+                  returnKeyType="send"
+                />
+              )}
+              name="password"
+              rules={{ required: 'Informe a senha' }}
             />
 
-            <Button title="Criar e acessar"/>
+            <Button title="Criar e acessar" 
+              onPress={handleSubmit(handleSignUp)}
+            />
           </Center>
            
           <Button 
