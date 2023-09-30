@@ -2,6 +2,8 @@ import { useState } from "react";
 import { VStack, Image, Text, Center, Heading, ScrollView } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { useForm, Controller } from "react-hook-form";
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import LogoSvg from "@assets/logo.svg";
 import BackgroundImg from "@assets/background.png";
@@ -16,14 +18,16 @@ type FormDataProps = {
   password: string;
 }
 
+const signUpSchema = yup.object({
+  name: yup.string().required('Informe o nome'),
+  email: yup.string().required('Informe o email').email('E-mail inválido'),
+  password: yup.string().required('Informe a senha').min(6, 'A senha deve ter pelo menos 6 dígitos.'),
+})
+
 export function SignUp(){
 
   const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
-    defaultValues: {
-      name: 'Jhon Doe',
-      email: '',
-      password: '',
-    }
+    resolver: yupResolver(signUpSchema),
   });
 
   const navigation = useNavigation();
@@ -32,8 +36,8 @@ export function SignUp(){
     navigation.goBack();
   }
 
-  function handleSignUp(data: FormDataProps){
-    console.log(data);
+  function handleSignUp({name, email, password}: FormDataProps){
+    console.log({name, email, password})
   }
 
   return (
@@ -67,12 +71,11 @@ export function SignUp(){
                   placeholder="Nome"
                   onChangeText={onChange}
                   value={value}
+                  errorMessage={errors.name?.message}
                 />
               )}
               name="name"
-              rules={{ required: 'Informe o nome' }}
             />
-            <Text color="red.500" fontSize="xs">{errors.name?.message}</Text>
 
             <Controller
               control={control}
@@ -83,11 +86,12 @@ export function SignUp(){
                   autoCapitalize="none"
                   onChangeText={onChange}
                   value={value}
+                  errorMessage={errors.email?.message}
                 />
               )}
               name="email"
-              rules={{ required: 'Informe o email' }}
             />
+
            
            <Controller
               control={control}
@@ -99,10 +103,10 @@ export function SignUp(){
                   value={value}
                   onSubmitEditing={handleSubmit(handleSignUp)}
                   returnKeyType="send"
+                  errorMessage={errors.password?.message}
                 />
               )}
               name="password"
-              rules={{ required: 'Informe a senha' }}
             />
 
             <Button title="Criar e acessar" 
@@ -113,7 +117,7 @@ export function SignUp(){
           <Button 
             title="Voltar para o login" 
             variant="outline"
-            mt={24}
+            mt={12}
             onPress={handleGoBack}
           />
 
