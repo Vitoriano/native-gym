@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { VStack, Image, Text, Center, Heading, ScrollView, useToast } from "native-base";
 import { useNavigation } from "@react-navigation/native";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, set } from "react-hook-form";
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -16,6 +16,7 @@ import { type } from "os";
 import { Alert } from "react-native";
 
 import { AppError } from "@utils/AppError";
+import { useAuth } from "@hooks/useAuth";
 
 type FormDataProps = {
   name: string;
@@ -31,7 +32,10 @@ const signUpSchema = yup.object({
 
 export function SignUp(){
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const toast = useToast();
+  const { singIn } = useAuth();
 
   const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
     resolver: yupResolver(signUpSchema),
@@ -46,14 +50,17 @@ export function SignUp(){
   async function handleSignUp({name, email, password}: FormDataProps){
    
     try {
-      const response = await api.post('/users', {
+      setIsLoading(true);
+      await api.post('/users', {
         name,
         email,
         password,
       });
+
+      await singIn(email, password);
   
     } catch (error) {
-      
+      setIsLoading(false);
       const isAppError = error instanceof AppError;
       toast.show({
         title: isAppError ? error.message : 'Ocorreu um erro ao fazer cadastro',
@@ -135,6 +142,7 @@ export function SignUp(){
 
             <Button title="Criar e acessar" 
               onPress={handleSubmit(handleSignUp)}
+              isLoading={isLoading}
             />
           </Center>
            
